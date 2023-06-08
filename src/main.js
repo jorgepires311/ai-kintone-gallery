@@ -14,7 +14,17 @@ import { Spinner } from 'spin.js';
 
     //The text we will give to the Open AI API
     const promptBuilder = () => {
-      // TODO
+      let promptString = `I want a cute ${event.record.animal.value}, who looks ${event.record.emotion.value}, holding a ${event.record.random.value}`;
+      let clothesArray = event.record.clothes.value;
+      clothesArray.forEach((element, index) => {
+        // if (index == 0) {
+        //   promptString += element;
+        // }
+        // else {
+        //   promptString + `and ${element}`;
+        // }
+        promptString = (index == 0) ? element : `and ${element}`;
+      });
       return promptString
     }
 
@@ -65,7 +75,16 @@ import { Spinner } from 'spin.js';
       var spinner = new Spinner(opts).spin();
       spinnerTarget.appendChild(spinner.el);
       // We need to call our Open AI API POST function with request's body... 🧐
-
+      generateImages(postBody).then(async (result) => {
+        let unixTimeStamp = result.created;
+        const date = new Date(unixTimeStamp * 1000);
+        const isoDateString = date.toISOString();
+        let imageBlob = await b64toBlob(result.data[0].b64_json);
+        let file = new File([imageBlob], "test.png", { type: 'image/png', lastModified: isoDateString });
+        await updateKintone(event.recordId, file, isoDateString);
+      }).finally[() => {
+        window.location.reload();
+      }]
       // TODO: TIME STAMP
       // The OpenAI API gives us a response with a timestamp, and an image in base64 format
       // Let's format the timestamp from unix time to a local timezone string.

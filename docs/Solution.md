@@ -82,7 +82,7 @@ import { Spinner } from 'spin.js';
         const unixTimestamp = result.created;
         // Let's format the timestamp from unix time to a local timezone string.
         const date = new Date(unixTimestamp * 1000); // multiply by 1000 to convert to milliseconds
-        const isoDateString = date.toISOString();
+             const isoDateString = date.toISOString();
 
         // We convert the base64 to a blob.
         let imageBlob = await b64toBlob(result.data[0].b64_json)
